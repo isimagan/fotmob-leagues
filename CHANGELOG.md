@@ -11,6 +11,7 @@ All notable changes to FotMob Leagues are documented in this file.
 - Expose `league_id` and `season` as sensor attributes.
 - Update the config entry title to the league name after the first successful refresh.
 - Add HACS metadata and installation documentation.
+- Add HACS and hassfest validation workflows.
 
 ## [0.1.0] - 2026-08-03
 
