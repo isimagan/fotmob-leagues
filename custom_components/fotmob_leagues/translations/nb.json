@@ -1,0 +1,20 @@
+{
+  "title": "FotMob Leagues",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Legg til liga",
+        "description": "Skriv inn liga-ID-en fra nettadressen til ligaen hos FotMob. Bruk for eksempel `203` fra en nettadresse som inneholder `/leagues/203/`.",
+        "data": {
+          "league_id": "Liga-ID"
+        },
+        "data_description": {
+          "league_id": "Den numeriske ID-en som vises i nettadressen til ligaen hos FotMob."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Denne ligaen er allerede konfigurert."
+    }
+  }
+}

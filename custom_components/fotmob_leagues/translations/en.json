@@ -1,0 +1,20 @@
+{
+  "title": "FotMob Leagues",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add league",
+        "description": "Enter the league ID from the FotMob league URL. For example, use `203` from a URL containing `/leagues/203/`.",
+        "data": {
+          "league_id": "League ID"
+        },
+        "data_description": {
+          "league_id": "The numeric ID shown in the FotMob league URL."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This league is already configured."
+    }
+  }
+}
