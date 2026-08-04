@@ -17,6 +17,8 @@ from .const import API_URL, DOMAIN, UPDATE_INTERVAL_MINUTES
 
 LOGGER = logging.getLogger(__name__)
 
+_EXCLUDED_STAND_FIELDS = {"id", "pageUrl"}
+
 
 class FotMobLeaguesCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Fetch league data from FotMob."""
@@ -57,9 +59,10 @@ class FotMobLeaguesCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
 
 def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
-    """Extract the league name, season and active round from a response."""
+    """Extract league metadata and the overall standings from a response."""
     details = payload["details"]
     active_round = payload["fixtures"]["fixtureInfo"]["activeRound"]["roundId"]
+    stands = _extract_stands(payload["table"])
 
     if not details["name"] or active_round in (None, ""):
         raise ValueError("League name or active round is missing")
@@ -73,4 +76,28 @@ def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
         "league_name": str(details["name"]),
         "round": round_value,
         "season": details.get("selectedSeason"),
+        "stands": stands,
     }
+
+
+def _extract_stands(table_sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return every row from FotMob's overall tables."""
+    stands: list[dict[str, Any]] = []
+
+    for section in table_sections:
+        all_table = section["data"]["table"]["all"]
+        if not isinstance(all_table, list):
+            raise TypeError("FotMob overall table is not a list")
+
+        for row in all_table:
+            if not isinstance(row, dict):
+                raise TypeError("FotMob table row is not an object")
+            stands.append(
+                {
+                    key: value
+                    for key, value in row.items()
+                    if key not in _EXCLUDED_STAND_FIELDS
+                }
+            )
+
+    return stands
