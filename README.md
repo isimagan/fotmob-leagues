@@ -11,6 +11,7 @@ A custom Home Assistant integration that creates league sensors from a FotMob le
 - Supports one or more FotMob leagues
 - Prevents the same league ID from being configured twice
 - Creates a `<league name> Table` sensor
+- Creates a `<league name> Top scorer` sensor
 - Uses the league's active round as the sensor state
 - Adds the FotMob league ID, selected season and overall table as attributes
 - Refreshes league data every 30 minutes
@@ -55,7 +56,9 @@ https://www.fotmob.com/nb/leagues/203/overview/1-divisjon
 
 ## Sensor
 
-The integration creates one sensor per configured league.
+The integration creates two sensors per configured league.
+
+### Table
 
 | Property | Example |
 | --- | --- |
@@ -72,6 +75,22 @@ Each object includes every field returned for the team except `id` and `pageUrl`
 It also includes `clubLogo`, a direct URL to the team's FotMob logo derived from
 the team ID before that ID is removed from the object.
 Home, away, form and other table variants are not included.
+
+### Top scorer
+
+| Property | Example |
+| --- | --- |
+| Name | `1. Divisjon Top scorer` |
+| State | `Sory Diarra` |
+| Attribute | `scorers: [...]` |
+| Attribute | `totalGoals: 467` |
+
+The state is the name of the leading player in FotMob's goals statistic. The
+`scorers` attribute contains the complete goals list, including the leading
+player. Each object contains `name`, `stat` (goals), `club`, `club_logo` and
+`player_pic`. `totalGoals` is the sum of `stat` for every player in `scorers`.
+The sensor is unavailable when FotMob does not provide a non-empty goals list
+for the selected season.
 
 ## Disclaimer
 
