@@ -2,7 +2,15 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
-## [0.4.0] - Unreleased
+## [0.5.0] - 2026-08-04
+
+### Added
+
+- Add a `<league name> Top scorer` sensor with the leading goalscorer's name as
+  its state and the complete goals list in the `scorers` attribute.
+- Add `totalGoals` with the sum of every player's goals in `scorers`.
+
+## [0.4.0] - 2026-08-04
 
 ### Added
 
