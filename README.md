@@ -69,6 +69,8 @@ The state represents the active round reported by FotMob.
 
 `stands` is an array containing one object per team from FotMob's `all` table.
 Each object includes every field returned for the team except `id` and `pageUrl`.
+It also includes `clubLogo`, a direct URL to the team's FotMob logo derived from
+the team ID before that ID is removed from the object.
 Home, away, form and other table variants are not included.
 
 ## Disclaimer
