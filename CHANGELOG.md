@@ -2,6 +2,18 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
+## [0.6.0] - 2026-08-04
+
+### Added
+
+- Add `<league name> Assist`, `Goal points`, `Yellow cards`, `Red cards` and
+  `Best rated` sensors.
+- Include each complete player list with names, values, clubs, club logos and
+  player pictures.
+- Add total card counts to the yellow-card and red-card sensors.
+- Make each player statistic sensor unavailable independently when FotMob does
+  not provide a non-empty list.
+
 ## [0.5.0] - 2026-08-04
 
 ### Added
