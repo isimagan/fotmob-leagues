@@ -57,6 +57,7 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
         return {
             "league_id": league_id,
             "season": self.coordinator.data["season"],
+            "stands": self.coordinator.data["stands"],
             "logo_path": (
                 "https://images.fotmob.com/image_resources/logo/"
                 f"leaguelogo/{league_id}.png"

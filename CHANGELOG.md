@@ -2,7 +2,14 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
-## [0.2.0] - Unreleased
+## [0.3.0] - Unreleased
+
+### Added
+
+- Expose the FotMob overall table as the `stands` sensor attribute.
+- Include every team table field except `id` and `pageUrl`.
+
+## [0.2.0] - 2026-08-04
 
 ### Added
 
