@@ -27,6 +27,8 @@ async def async_setup_entry(
 class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntity):
     """Show the active round for a FotMob league."""
 
+    _attr_icon = "mdi:table"
+
     def __init__(self, coordinator: FotMobLeaguesCoordinator) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
@@ -35,10 +37,6 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
 
         self._attr_name = f"{league_name} Table"
         self._attr_unique_id = f"{league_id}_table"
-        self._attr_entity_picture = (
-            "https://images.fotmob.com/image_resources/logo/"
-            f"leaguelogo/{league_id}.png"
-        )
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, str(league_id))},
             name=league_name,
@@ -55,7 +53,12 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return useful league metadata."""
+        league_id = self.coordinator.league_id
         return {
-            "league_id": self.coordinator.league_id,
+            "league_id": league_id,
             "season": self.coordinator.data["season"],
+            "logo_path": (
+                "https://images.fotmob.com/image_resources/logo/"
+                f"leaguelogo/{league_id}.png"
+            ),
         }
