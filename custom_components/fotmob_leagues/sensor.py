@@ -27,22 +27,24 @@ async def async_setup_entry(
 class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntity):
     """Show the active round for a FotMob league."""
 
-    _attr_icon = "mdi:table"
-
     def __init__(self, coordinator: FotMobLeaguesCoordinator) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
         league_name = coordinator.data["league_name"]
+        league_id = coordinator.league_id
+
         self._attr_name = f"{league_name} Table"
-        self._attr_unique_id = f"{coordinator.league_id}_table"
+        self._attr_unique_id = f"{league_id}_table"
+        self._attr_entity_picture = (
+            "https://images.fotmob.com/image_resources/logo/"
+            f"leaguelogo/{league_id}.png"
+        )
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, str(coordinator.league_id))},
+            identifiers={(DOMAIN, str(league_id))},
             name=league_name,
             manufacturer="FotMob",
             model="League",
-            configuration_url=(
-                f"https://www.fotmob.com/leagues/{coordinator.league_id}/overview"
-            ),
+            configuration_url=f"https://www.fotmob.com/leagues/{league_id}/overview",
         )
 
     @property
