@@ -18,6 +18,9 @@ from .const import API_URL, DOMAIN, UPDATE_INTERVAL_MINUTES
 LOGGER = logging.getLogger(__name__)
 
 _EXCLUDED_STAND_FIELDS = {"id", "pageUrl"}
+_TEAM_LOGO_URL = (
+    "https://images.fotmob.com/image_resources/logo/teamlogo/{team_id}.png"
+)
 
 
 class FotMobLeaguesCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -92,12 +95,17 @@ def _extract_stands(table_sections: list[dict[str, Any]]) -> list[dict[str, Any]
         for row in all_table:
             if not isinstance(row, dict):
                 raise TypeError("FotMob table row is not an object")
-            stands.append(
-                {
-                    key: value
-                    for key, value in row.items()
-                    if key not in _EXCLUDED_STAND_FIELDS
-                }
-            )
+
+            team_id = row["id"]
+            if team_id in (None, ""):
+                raise ValueError("FotMob table row is missing a team ID")
+
+            stand = {
+                key: value
+                for key, value in row.items()
+                if key not in _EXCLUDED_STAND_FIELDS
+            }
+            stand["clubLogo"] = _TEAM_LOGO_URL.format(team_id=team_id)
+            stands.append(stand)
 
     return stands

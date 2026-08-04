@@ -2,7 +2,13 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
-## [0.3.0] - Unreleased
+## [0.4.0] - Unreleased
+
+### Added
+
+- Add a `clubLogo` URL to every object in the `stands` attribute.
+
+## [0.3.0] - 2026-08-04
 
 ### Added
 
