@@ -6,10 +6,12 @@ from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import FotMobLeaguesConfigEntry
+from .const import DOMAIN
 from .coordinator import FotMobLeaguesCoordinator
 
 
@@ -30,8 +32,18 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
     def __init__(self, coordinator: FotMobLeaguesCoordinator) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self._attr_name = f'{coordinator.data["league_name"]} Table'
+        league_name = coordinator.data["league_name"]
+        self._attr_name = f"{league_name} Table"
         self._attr_unique_id = f"{coordinator.league_id}_table"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, str(coordinator.league_id))},
+            name=league_name,
+            manufacturer="FotMob",
+            model="League",
+            configuration_url=(
+                f"https://www.fotmob.com/leagues/{coordinator.league_id}/overview"
+            ),
+        )
 
     @property
     def native_value(self) -> int | str:
