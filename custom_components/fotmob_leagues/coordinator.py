@@ -7,7 +7,7 @@ from datetime import timedelta
 import logging
 from typing import Any
 
-from aiohttp import ClientError
+from aiohttp import ClientError, ClientResponseError
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -21,6 +21,14 @@ _EXCLUDED_STAND_FIELDS = {"id", "pageUrl"}
 _TEAM_LOGO_URL = (
     "https://images.fotmob.com/image_resources/logo/teamlogo/{team_id}.png"
 )
+
+
+class FotMobConnectionError(Exception):
+    """Raised when FotMob cannot be reached."""
+
+
+class InvalidFotMobLeagueError(Exception):
+    """Raised when a league ID does not return valid league data."""
 
 
 class FotMobLeaguesCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -39,29 +47,45 @@ class FotMobLeaguesCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch and parse the latest league data."""
-        session = async_get_clientsession(self.hass)
-        headers = {"User-Agent": "Home Assistant FotMob Leagues"}
-
         try:
-            async with asyncio.timeout(15):
-                async with session.get(
-                    API_URL,
-                    params={"id": self.league_id},
-                    headers=headers,
-                ) as response:
-                    response.raise_for_status()
-                    payload = await response.json(content_type=None)
-        except (TimeoutError, ClientError, ValueError) as err:
+            return await async_fetch_league_data(self.hass, self.league_id)
+        except FotMobConnectionError as err:
             raise UpdateFailed(
                 f"Unable to fetch FotMob league {self.league_id}"
             ) from err
-
-        try:
-            return _extract_league_data(payload)
-        except (KeyError, TypeError, ValueError) as err:
+        except InvalidFotMobLeagueError as err:
             raise UpdateFailed(
                 f"Invalid data returned for FotMob league {self.league_id}"
             ) from err
+
+
+async def async_fetch_league_data(
+    hass: HomeAssistant, league_id: int
+) -> dict[str, Any]:
+    """Fetch and validate data for a FotMob league ID."""
+    session = async_get_clientsession(hass)
+    headers = {"User-Agent": "Home Assistant FotMob Leagues"}
+
+    try:
+        async with asyncio.timeout(15):
+            async with session.get(
+                API_URL,
+                params={"id": league_id},
+                headers=headers,
+            ) as response:
+                response.raise_for_status()
+                payload = await response.json(content_type=None)
+    except ClientResponseError as err:
+        if err.status in (400, 404):
+            raise InvalidFotMobLeagueError from err
+        raise FotMobConnectionError from err
+    except (TimeoutError, ClientError, ValueError) as err:
+        raise FotMobConnectionError from err
+
+    try:
+        return _extract_league_data(payload)
+    except (KeyError, TypeError, ValueError) as err:
+        raise InvalidFotMobLeagueError from err
 
 
 def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
@@ -71,11 +95,7 @@ def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
     stands = _extract_stands(payload["table"])
     leader = stands[0].get("name") if stands else None
 
-    if (
-        not details["name"]
-        or active_round in (None, "")
-        or leader in (None, "")
-    ):
+    if not details["name"] or active_round in (None, "") or leader in (None, ""):
         raise ValueError("League name, active round or leader is missing")
 
     try:
