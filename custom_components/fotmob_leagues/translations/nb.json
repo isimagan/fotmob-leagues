@@ -11,7 +11,15 @@
         "data_description": {
           "league_id": "Den numeriske ID-en som vises i nettadressen til ligaen hos FotMob."
         }
+      },
+      "confirm": {
+        "title": "Bekreft liga",
+        "description": "Er dette ligaen du vil legge til?\n\n![{league_name}]({league_logo_url})\n\n**{league_name}**\n\nFotMob liga-ID: `{league_id}`"
       }
+    },
+    "error": {
+      "invalid_league": "Liga-ID-en tilhører ikke en gyldig FotMob-liga.",
+      "cannot_connect": "Kunne ikke koble til FotMob. Prøv igjen."
     },
     "abort": {
       "already_configured": "Denne ligaen er allerede konfigurert."
