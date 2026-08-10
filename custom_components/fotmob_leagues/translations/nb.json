@@ -9,7 +9,7 @@
           "league_id": "Liga-ID"
         },
         "data_description": {
-          "league_id": "Den numeriske ID-en som vises i nettadressen til ligaen hos FotMob."
+          "league_id": "Skriv for eksempel inn `203` fra nettadressen til ligaen hos FotMob."
         }
       },
       "confirm": {

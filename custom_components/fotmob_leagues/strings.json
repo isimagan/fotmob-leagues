@@ -9,7 +9,7 @@
           "league_id": "League ID"
         },
         "data_description": {
-          "league_id": "The numeric ID shown in the FotMob league URL."
+          "league_id": "For example, enter `203` from the FotMob league URL."
         }
       },
       "confirm": {
