@@ -11,6 +11,7 @@ All notable changes to FotMob Leagues are documented in this file.
 - Validate a league ID with FotMob before allowing configuration to continue.
 - Add a confirmation step showing the validated league name, logo and ID.
 - Show separate errors for an invalid league ID and an unavailable FotMob service.
+- Leave the league ID field empty initially and show an example as helper text.
 
 ### Removed
 
