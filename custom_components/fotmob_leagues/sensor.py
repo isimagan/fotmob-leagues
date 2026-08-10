@@ -48,7 +48,7 @@ async def async_setup_entry(
 
 
 class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntity):
-    """Show the active round for a FotMob league."""
+    """Show the league leader for a FotMob league."""
 
     _attr_icon = "mdi:table"
 
@@ -69,9 +69,9 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
         )
 
     @property
-    def native_value(self) -> int | str:
-        """Return the active league round."""
-        return self.coordinator.data["round"]
+    def native_value(self) -> str:
+        """Return the league leader's name."""
+        return self.coordinator.data["leader"]
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -80,6 +80,7 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
         return {
             "league_id": league_id,
             "season": self.coordinator.data["season"],
+            "round": self.coordinator.data["round"],
             "stands": self.coordinator.data["stands"],
             "logo_path": (
                 "https://images.fotmob.com/image_resources/logo/"
