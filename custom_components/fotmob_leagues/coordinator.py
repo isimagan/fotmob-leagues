@@ -69,9 +69,14 @@ def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
     details = payload["details"]
     active_round = payload["fixtures"]["fixtureInfo"]["activeRound"]["roundId"]
     stands = _extract_stands(payload["table"])
+    leader = stands[0].get("name") if stands else None
 
-    if not details["name"] or active_round in (None, ""):
-        raise ValueError("League name or active round is missing")
+    if (
+        not details["name"]
+        or active_round in (None, "")
+        or leader in (None, "")
+    ):
+        raise ValueError("League name, active round or leader is missing")
 
     try:
         round_value: int | str = int(active_round)
@@ -80,6 +85,7 @@ def _extract_league_data(payload: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "league_name": str(details["name"]),
+        "leader": str(leader),
         "round": round_value,
         "season": details.get("selectedSeason"),
         "stands": stands,
