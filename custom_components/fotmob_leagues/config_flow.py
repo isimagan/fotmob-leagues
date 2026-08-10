@@ -32,27 +32,28 @@ class FotMobLeaguesConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             league_id = user_input[CONF_LEAGUE_ID]
 
-            try:
-                league_data = await async_fetch_league_data(self.hass, league_id)
-            except InvalidFotMobLeagueError:
-                errors["base"] = "invalid_league"
-            except FotMobConnectionError:
-                errors["base"] = "cannot_connect"
+            if league_id < 1:
+                errors[CONF_LEAGUE_ID] = "invalid_league"
             else:
-                await self.async_set_unique_id(str(league_id))
-                self._abort_if_unique_id_configured()
+                try:
+                    league_data = await async_fetch_league_data(self.hass, league_id)
+                except InvalidFotMobLeagueError:
+                    errors["base"] = "invalid_league"
+                except FotMobConnectionError:
+                    errors["base"] = "cannot_connect"
+                else:
+                    await self.async_set_unique_id(str(league_id))
+                    self._abort_if_unique_id_configured()
 
-                self._league_id = league_id
-                self._league_name = league_data["league_name"]
-                return await self.async_step_confirm()
+                    self._league_id = league_id
+                    self._league_name = league_data["league_name"]
+                    return await self.async_step_confirm()
 
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_LEAGUE_ID): vol.All(
-                        vol.Coerce(int), vol.Range(min=1)
-                    )
+                    vol.Required(CONF_LEAGUE_ID): vol.Coerce(int),
                 }
             ),
             errors=errors,
