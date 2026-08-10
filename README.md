@@ -11,8 +11,8 @@ A custom Home Assistant integration that creates a league sensor from a FotMob l
 - Supports one or more FotMob leagues
 - Prevents the same league ID from being configured twice
 - Creates a `<league name> Table` sensor for each configured league
-- Uses the league's active round as the sensor state
-- Adds the FotMob league ID, selected season and overall table as attributes
+- Uses the league leader's name as the sensor state
+- Adds the upcoming round, FotMob league ID, selected season and overall table as attributes
 - Refreshes league data every 30 minutes
 - Includes English and Norwegian translations
 
@@ -62,12 +62,14 @@ The integration creates one sensor per configured league.
 | Property | Example |
 | --- | --- |
 | Name | `1. Divisjon Table` |
-| State | `17` |
+| State | `League leader` |
 | Attribute | `league_id: 203` |
 | Attribute | `season: 2026` |
+| Attribute | `round: 17` |
 | Attribute | `stands: [...]` |
 
-The state represents the active round reported by FotMob.
+The state is the name of the team at the top of FotMob's overall table.
+`round` is the upcoming round reported by FotMob.
 
 `stands` is an array containing one object per team from FotMob's `all` table.
 Each object includes every field returned for the team except `id` and `pageUrl`.
