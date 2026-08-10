@@ -2,6 +2,25 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
+## [0.7.0] - 2026-08-10
+
+### Changed
+
+- Use the league leader's name as the Table sensor state.
+- Move the upcoming round from the state to the `round` attribute.
+- Validate a league ID with FotMob before allowing configuration to continue.
+- Add a confirmation step showing the validated league name, logo and ID.
+- Show separate errors for an invalid league ID and an unavailable FotMob service.
+
+### Removed
+
+- Remove all player statistic sensors, leaving the `<league name> Table` sensor
+  as the integration's only entity.
+- Remove the additional FotMob requests and parsing used exclusively by the
+  player statistic sensors.
+- Delete the six legacy player statistic entries from Home Assistant's entity
+  registry when the integration is loaded.
+
 ## [0.6.0] - 2026-08-04
 
 ### Added
