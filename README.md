@@ -1,6 +1,6 @@
 # FotMob Leagues
 
-A custom Home Assistant integration that creates league sensors from a FotMob league ID.
+A custom Home Assistant integration that creates a league sensor from a FotMob league ID.
 
 > [!IMPORTANT]
 > This project is under development and has not been submitted for inclusion in the HACS default store. It uses an undocumented FotMob endpoint. Public distribution will not take place before its use has been clarified with FotMob.
@@ -10,9 +10,8 @@ A custom Home Assistant integration that creates league sensors from a FotMob le
 - Configured through the Home Assistant user interface
 - Supports one or more FotMob leagues
 - Prevents the same league ID from being configured twice
-- Creates a `<league name> Table` sensor
-- Creates six player statistic sensors per league
-- Uses the league's active round as the table sensor state
+- Creates a `<league name> Table` sensor for each configured league
+- Uses the league's active round as the sensor state
 - Adds the FotMob league ID, selected season and overall table as attributes
 - Refreshes league data every 30 minutes
 - Includes English and Norwegian translations
@@ -54,9 +53,9 @@ The league ID is visible in a FotMob league URL. In this example, the ID is `203
 https://www.fotmob.com/nb/leagues/203/overview/1-divisjon
 ```
 
-## Sensors
+## Sensor
 
-The integration creates seven sensors per configured league.
+The integration creates one sensor per configured league.
 
 ### Table
 
@@ -75,45 +74,6 @@ Each object includes every field returned for the team except `id` and `pageUrl`
 It also includes `clubLogo`, a direct URL to the team's FotMob logo derived from
 the team ID before that ID is removed from the object.
 Home, away, form and other table variants are not included.
-
-### Top scorer
-
-| Property | Example |
-| --- | --- |
-| Name | `1. Divisjon Top scorer` |
-| State | `Sory Diarra` |
-| Attribute | `scorers: [...]` |
-| Attribute | `totalGoals: 467` |
-
-The state is the name of the leading player in FotMob's goals statistic. The
-`scorers` attribute contains the complete goals list, including the leading
-player. Each object contains `name`, `stat` (goals), `club`, `club_logo` and
-`player_pic`. `totalGoals` is the sum of `stat` for every player in `scorers`.
-The sensor is unavailable when FotMob does not provide a non-empty goals list
-for the selected season.
-
-### Player statistics
-
-The remaining player statistic sensors follow the same structure as Top
-scorer. Their state is the name of the first player in the complete FotMob list.
-
-| Sensor name | List attribute | Total attribute |
-| --- | --- | --- |
-| `<league name> Assist` | `assists` | None |
-| `<league name> Goal points` | `goalPoints` | None |
-| `<league name> Yellow cards` | `yellowCards` | `totalYellowCards` |
-| `<league name> Red cards` | `redCards` | `totalRedCards` |
-| `<league name> Best rated` | `ratings` | None |
-
-Every object in these list attributes contains `name`, `stat`, `club`,
-`club_logo` and `player_pic`. `stat` is the value of the corresponding FotMob
-statistic, including a decimal rating in `ratings`. Assist and Goal points do
-not expose a total. Yellow cards and Red cards expose the sum of `stat` in
-their listed total attribute.
-
-Each sensor is independently unavailable when FotMob does not provide a
-non-empty list for that statistic and season. Other sensors for the same league
-continue to update.
 
 ## Disclaimer
 
