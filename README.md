@@ -9,6 +9,8 @@ A custom Home Assistant integration that creates a league sensor from a FotMob l
 
 - Configured through the Home Assistant user interface
 - Supports one or more FotMob leagues
+- Validates the league ID with FotMob before configuration
+- Shows the league name and logo for confirmation
 - Prevents the same league ID from being configured twice
 - Creates a `<league name> Table` sensor for each configured league
 - Uses the league leader's name as the sensor state
@@ -46,6 +48,12 @@ The resulting path should be:
 2. Select **Add integration**.
 3. Search for **FotMob Leagues**.
 4. Enter the numeric FotMob league ID.
+5. Wait while the integration validates the ID with FotMob.
+6. Confirm the league shown with its name, logo and ID.
+
+If the ID does not return valid league data, the form shows an error and does not
+create the configuration. A connection error is shown separately if FotMob
+cannot be reached.
 
 The league ID is visible in a FotMob league URL. In this example, the ID is `203`:
 
