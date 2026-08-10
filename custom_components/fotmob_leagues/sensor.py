@@ -5,7 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -14,6 +16,15 @@ from . import FotMobLeaguesConfigEntry
 from .const import DOMAIN
 from .coordinator import FotMobLeaguesCoordinator
 
+_REMOVED_PLAYER_STATISTIC_SENSOR_KEYS = (
+    "top_scorer",
+    "assist",
+    "goal_points",
+    "yellow_cards",
+    "red_cards",
+    "best_rated",
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -21,6 +32,18 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the league sensor."""
+    entity_registry = er.async_get(hass)
+    league_id = entry.runtime_data.league_id
+
+    for sensor_key in _REMOVED_PLAYER_STATISTIC_SENSOR_KEYS:
+        entity_id = entity_registry.async_get_entity_id(
+            Platform.SENSOR,
+            DOMAIN,
+            f"{league_id}_{sensor_key}",
+        )
+        if entity_id is not None:
+            entity_registry.async_remove(entity_id)
+
     async_add_entities([FotMobTableSensor(entry.runtime_data)])
 
 
