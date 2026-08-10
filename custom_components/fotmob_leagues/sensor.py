@@ -13,7 +13,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import FotMobLeaguesConfigEntry
-from .const import DOMAIN
+from .const import DOMAIN, LEAGUE_LOGO_URL
 from .coordinator import FotMobLeaguesCoordinator
 
 _REMOVED_PLAYER_STATISTIC_SENSOR_KEYS = (
@@ -82,8 +82,5 @@ class FotMobTableSensor(CoordinatorEntity[FotMobLeaguesCoordinator], SensorEntit
             "season": self.coordinator.data["season"],
             "round": self.coordinator.data["round"],
             "stands": self.coordinator.data["stands"],
-            "logo_path": (
-                "https://images.fotmob.com/image_resources/logo/"
-                f"leaguelogo/{league_id}.png"
-            ),
+            "logo_path": LEAGUE_LOGO_URL.format(league_id=league_id),
         }
