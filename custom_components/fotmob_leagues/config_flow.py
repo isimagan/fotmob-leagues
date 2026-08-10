@@ -58,7 +58,6 @@ class FotMobLeaguesConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    @override
     async def async_step_confirm(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
