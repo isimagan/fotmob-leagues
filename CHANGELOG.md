@@ -2,6 +2,15 @@
 
 All notable changes to FotMob Leagues are documented in this file.
 
+## [0.7.0] - 2026-08-10
+
+### Removed
+
+- Remove all player statistic sensors, leaving the `<league name> Table` sensor
+  as the integration's only entity.
+- Remove the additional FotMob requests and parsing used exclusively by the
+  player statistic sensors.
+
 ## [0.6.0] - 2026-08-04
 
 ### Added
