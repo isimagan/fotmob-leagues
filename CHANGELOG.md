@@ -10,6 +10,8 @@ All notable changes to FotMob Leagues are documented in this file.
   as the integration's only entity.
 - Remove the additional FotMob requests and parsing used exclusively by the
   player statistic sensors.
+- Delete the six legacy player statistic entries from Home Assistant's entity
+  registry when the integration is loaded.
 
 ## [0.6.0] - 2026-08-04
 
