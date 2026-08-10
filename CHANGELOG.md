@@ -4,6 +4,11 @@ All notable changes to FotMob Leagues are documented in this file.
 
 ## [0.7.0] - 2026-08-10
 
+### Changed
+
+- Use the league leader's name as the Table sensor state.
+- Move the upcoming round from the state to the `round` attribute.
+
 ### Removed
 
 - Remove all player statistic sensors, leaving the `<league name> Table` sensor
