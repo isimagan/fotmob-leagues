@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import timedelta
+import json
 import logging
 from typing import Any
 
@@ -21,6 +22,25 @@ _EXCLUDED_STAND_FIELDS = {"id", "pageUrl"}
 _TEAM_LOGO_URL = (
     "https://images.fotmob.com/image_resources/logo/teamlogo/{team_id}.png"
 )
+_MAX_RESPONSE_BYTES = 1024 * 1024
+_READ_CHUNK_BYTES = 32 * 1024
+
+
+async def _read_bounded_json(response: Any) -> Any:
+    """Decode JSON without buffering an unbounded upstream response."""
+    if (
+        response.content_length is not None
+        and response.content_length > _MAX_RESPONSE_BYTES
+    ):
+        raise ValueError("FotMob response is too large")
+
+    body = bytearray()
+    async for chunk in response.content.iter_chunked(_READ_CHUNK_BYTES):
+        body.extend(chunk)
+        if len(body) > _MAX_RESPONSE_BYTES:
+            raise ValueError("FotMob response is too large")
+
+    return json.loads(body)
 
 
 class FotMobConnectionError(Exception):
@@ -74,7 +94,7 @@ async def async_fetch_league_data(
                 headers=headers,
             ) as response:
                 response.raise_for_status()
-                payload = await response.json(content_type=None)
+                payload = await _read_bounded_json(response)
     except ClientResponseError as err:
         if err.status in (400, 404):
             raise InvalidFotMobLeagueError from err
